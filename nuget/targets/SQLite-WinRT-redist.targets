@@ -1,0 +1,20 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <AppTargetPlatformGreaterThanWindows81 Condition= "($([System.Version]::Parse('$(TargetPlatformVersion.TrimStart(`v`))').CompareTo( $([System.Version]::Parse('8.1')) )) &gt;= 0)">true</AppTargetPlatformGreaterThanWindows81>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Content Include="$(MSBuildThisFileDirectory)..\..\redist\Windows8\3.8.3.1\$(Configuration)\$(Platform)\sqlite3.dll">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Condition="'$(Configuration)' == 'Debug'" Include="$(MSBuildThisFileDirectory)..\..\redist\Windows8\3.8.3.1\$(Configuration)\$(Platform)\sqlite3.pdb">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+    </ItemGroup>
+
+    <Target Name="PlatformCheck" BeforeTargets="BuildOnlySettings" Condition=" ('$(AppTargetPlatformGreaterThanWindows81)' == 'true')  AND ('$(DesignTimeBuild)' != 'true') ">
+        <Error Condition=" ('$(Platform)' != 'x64') AND ('$(Platform)' != 'x86') AND ('$(Platform)' != 'ARM') " Text="$(MSBuildThisFileName) does not support the currently selected platform of '$(Platform)'. The supported platforms are 'x64', 'x86' and 'ARM'." />
+    </Target>
+
+</Project>
+
