@@ -1,20 +1,20 @@
 <?xml version="1.0"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
-        <id>SQLite-WinRT-redist</id>
-        <version>3.8.3.1</version>
-        <title>SQLite for Windows Runtime (Windows 8.1) - Redist</title>
+        <id>SQLite.WinRT.redist</id>
+        <version>1.0.0.0</version>
+        <title>SQLite for Windows Runtime (Windows 8.1) - Redistribution</title>
         <authors>Micah Lewis</authors>
         <owners>Micah Lewis</owners>
-        <licenseUrl>https://raw.github.com/micahl/SQLite.Win8.1-redist/master/LICENSE.txt</licenseUrl>
-        <projectUrl>https://github.com/micahl/SQLite.Win8.1-redist</projectUrl>
+        <licenseUrl>https://raw.github.com/micahl/SQLite-WinRT-redist/master/LICENSE</licenseUrl>
+        <projectUrl>https://github.com/micahl/SQLite-WinRT-redist</projectUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>This is a redistribution of the binaries from the 
             "SQLite for Windows Runtime (Windows 8.1) Extension SDK" packaged NuGet-style. Unlike the Extension SDK, this installs
             the binaries per-project versus per-machine.  If it detects the Extension SDK is installed on the machine then it will
             add it as a reference and gracefully uninstall itself.  This package is compatible with the Windows 8.1 platform</description>
         <summary>A redistribution of the binaries from the "SQLite for Windows Runtime (Windows 8.1) Extension SDK" packaged NuGet-style.</summary>
-        <releaseNotes>v3.8.3.1: Initial release</releaseNotes>
+        <releaseNotes>v1.0.0.0: Initial package for SQLite 3.8.3.1</releaseNotes>
         <tags>sqlite sql winrt database metro</tags>
     </metadata>
     <files>
