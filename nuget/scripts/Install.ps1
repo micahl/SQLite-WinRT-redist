@@ -40,15 +40,18 @@ param($installPath, $toolsPath, $package, $project)
   {
     try {
       $sqliteLibsReference = $project.Object.References.AddSDK($SQLiteSDKName, $SQLiteSDKIdentity)
+      # If the reference is unresolved with no path then assume it isn't installed
+      if ($sqliteLibsReference -and $sqliteLibsReference.Resolved -and $sqliteLibsReference.Path)
+      {
+        Write-Host "Successfully referenced the installed $SQLiteSDKName Extension SDK.  Uninstalling this package."
+        Uninstall-Package $package.Id
+        return
+      }
+      else
+      {
+        $sqliteLibsReference.Remove()  # Cleanup orphaned reference
+        Write-Host "$SQLiteSDKName is not installed"
+        Write-Host "This package will provide the redistributable binaries as well as update build logic to include the required flavor of 'sqlite3.dll' as part of the build output."
+      }
     } catch [Exception] { }
-
-    if ($sqliteLibsReference)
-    {
-      Write-Host "Successfully referenced the $SQLiteSDKName Extension SDK.  Uninstalling this package."
-      Uninstall-Package $package.Id
-      return
-    }
   }
-
-  Write-Host "$SQLiteSDKName is not installed"
-  Write-Host "This package will provide the redistributable binaries as well as update build logic to include the required flavor of 'sqlite3.dll' as part of the build output."

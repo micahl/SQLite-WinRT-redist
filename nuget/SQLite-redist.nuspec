@@ -29,6 +29,6 @@
         <file src="SQLite\3.8.3.1\release\ARM\sqlite3.dll" target="redist\Windows8\3.8.3.1\release\ARM" />
         <file src="SQLite\3.8.3.1\bootstrapper" target="lib\Windows8" />
         <file src="SQLite\3.8.3.1\Install.ps1" target="tools\Windows8" />
-        <file src="SQLite\3.8.3.1\SQLite-WinRT-redist.targets" target="build\Windows8" />
+        <file src="SQLite\3.8.3.1\SQLite.WinRT.redist.targets" target="build\Windows8" />
     </files>
 </package>
