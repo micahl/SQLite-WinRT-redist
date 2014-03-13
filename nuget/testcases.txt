@@ -1,0 +1,31 @@
+Start with no version of the official SQLite Extension SDK installed
+install v1.0.2 (upgrade), cancel elevation prompt
+install v1.0.2 (upgrade), cancel vsix installer
+install v1.0.2 (upgrade), complete vsix installer
+
+Start with a previous version of the official SQLite Extension SDK installed
+install v1.0.2 (upgrade), cancel elevation prompt
+install v1.0.2 (upgrade), cancel vsix installer
+install v1.0.2 (upgrade), complete vsix installer
+
+Start with the latest version of the official SQLite Extension SDK installed
+install v1.0.2 (upgrade), cancel elevation prompt
+install v1.0.2 (upgrade), cancel vsix installer
+install v1.0.2 (upgrade), complete vsix installer
+
+
+Start with no version of the official SQLite Extension SDK installed
+install v1.0.1, build, install v1.0.2 (upgrade), cancel elevation prompt
+install v1.0.1, build, install v1.0.2 (upgrade), cancel vsix installer
+install v1.0.1, build, install v1.0.2 (upgrade), complete vsix installer
+
+Start with a previous version of the official SQLite Extension SDK installed
+install v1.0.1, build, install v1.0.2 (upgrade), cancel elevation prompt
+install v1.0.1, build, install v1.0.2 (upgrade), cancel vsix installer
+install v1.0.1, build, install v1.0.2 (upgrade), complete vsix installer
+
+Start with the latest version of the official SQLite Extension SDK installed
+install v1.0.1, build, install v1.0.2 (upgrade), cancel elevation prompt
+install v1.0.1, build, install v1.0.2 (upgrade), cancel vsix installer
+install v1.0.1, build, install v1.0.2 (upgrade), complete vsix installer
+

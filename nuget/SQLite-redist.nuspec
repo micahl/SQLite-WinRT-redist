@@ -2,31 +2,23 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
         <id>SQLite.WinRT.redist</id>
-        <version>1.0.1.0</version>
+        <version>1.0.2.0</version>
         <title>SQLite for Windows Runtime (Windows 8.1) - Redistribution</title>
         <authors>Micah Lewis</authors>
         <owners>Micah Lewis</owners>
         <licenseUrl>https://raw.github.com/micahl/SQLite-WinRT-redist/master/LICENSE</licenseUrl>
         <projectUrl>https://github.com/micahl/SQLite-WinRT-redist</projectUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
-        <description>This is a redistribution of the binaries from the "SQLite for Windows Runtime (Windows 8.1) Extension SDK" packaged NuGet-style. Unlike the Extension SDK, this installs the binaries per-project versus per-machine.  If it detects the Extension SDK (http://www.sqlite.org/2014/sqlite-winrt81-3080301.vsix) is installed on the machine then it will add it as a reference and gracefully uninstall itself.  This package is compatible with the Windows 8.1 platform.</description>
+        <description>This is a redistribution of the binaries from the "SQLite for Windows Runtime (Windows 8.1) Extension SDK" packaged NuGet-style. Unlike the Extension SDK, this installs the binaries per-project versus per-machine.  If it detects the Extension SDK (http://www.sqlite.org/2014/sqlite-winrt81-3080401.vsix) is installed on the machine then it will add it as a reference and gracefully uninstall itself.  This package is compatible with the Windows 8.1 platform.</description>
         <summary>A redistribution of the binaries from the "SQLite for Windows Runtime (Windows 8.1) Extension SDK" packaged NuGet-style.</summary>
-        <releaseNotes>v1.0.1: Fixed bug in detecting whether the Extension SDK is installed
+        <releaseNotes>v1.0.2: Update to install SQLite.3.8.4.1
+v1.0.1: Fixed bug in detecting whether the Extension SDK is installed
 v1.0.0: Initial package for SQLite 3.8.3.1</releaseNotes>
         <tags>sqlite sql winrt database metro</tags>
     </metadata>
     <files>
-        <file src="SQLite\3.8.3.1\debug\x86\sqlite3.dll" target="redist\Windows8\3.8.3.1\debug\x86" />
-        <file src="SQLite\3.8.3.1\debug\x86\sqlite3.pdb" target="redist\Windows8\3.8.3.1\debug\x86" />
-        <file src="SQLite\3.8.3.1\debug\x64\sqlite3.dll" target="redist\Windows8\3.8.3.1\debug\x64" />
-        <file src="SQLite\3.8.3.1\debug\x64\sqlite3.pdb" target="redist\Windows8\3.8.3.1\debug\x64" />
-        <file src="SQLite\3.8.3.1\debug\ARM\sqlite3.dll" target="redist\Windows8\3.8.3.1\debug\ARM" />
-        <file src="SQLite\3.8.3.1\debug\ARM\sqlite3.pdb" target="redist\Windows8\3.8.3.1\debug\ARM" />
-        <file src="SQLite\3.8.3.1\release\x86\sqlite3.dll" target="redist\Windows8\3.8.3.1\release\x86" />
-        <file src="SQLite\3.8.3.1\release\x64\sqlite3.dll" target="redist\Windows8\3.8.3.1\release\x64" />
-        <file src="SQLite\3.8.3.1\release\ARM\sqlite3.dll" target="redist\Windows8\3.8.3.1\release\ARM" />
-        <file src="SQLite\3.8.3.1\bootstrapper" target="lib\Windows8" />
-        <file src="SQLite\3.8.3.1\Install.ps1" target="tools\Windows8" />
-        <file src="SQLite\3.8.3.1\SQLite.WinRT.redist.targets" target="build\Windows8" />
+        <file src="SQLite\3.8.4.1\sqlite-winrt81-3080401.vsix" target="redist\Windows8\3.8.4.1" />
+        <file src="SQLite\3.8.4.1\bootstrapper" target="lib\Windows8" />
+        <file src="SQLite\3.8.4.1\Install.ps1" target="tools\Windows8" />
     </files>
 </package>

@@ -1,9 +1,18 @@
 param($installPath, $toolsPath, $package, $project)
-  $SQLiteVersion = '3.8.3.1'
-  $SQLiteSDKIdentity = "SQLite.WinRT81, Version=$SQLiteVersion"
+  $sqliteVSIXUrl = 'http://www.sqlite.org/2014/sqlite-winrt81-3080401.vsix'
+  $SQLiteVersion = '3.8.4.1'
+  $SQLiteSDKIdentity = 'SQLite.WinRT81'
+  $SQLiteSDKIdentityVer = "$SQLiteSDKIdentity, Version=$SQLiteVersion"
   $SQLiteSDKName = 'SQLite for Windows Runtime (Windows 8.1)'
   $VCLibsSDKIdentity = 'Microsoft.VCLibs, version=12.0'
   $VCLibsSDKName = 'Microsoft Visual C++ 2013 Runtime Package for Windows'
+  $tmpVSIXFile = Join-Path $env:TEMP (Split-Path -leaf $sqliteVSIXUrl)
+  $vsixinstaller = Join-Path $env:VS120COMNTOOLS '..\IDE\vsixinstaller.exe'
+
+  Write-Host $installPath
+  Write-Host $toolsPath
+  Write-Host $package
+  Write-Host $project
 
   # Need to load MSBuild assembly if it's not loaded yet.
   Add-Type -AssemblyName 'Microsoft.Build, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'
@@ -32,26 +41,90 @@ param($installPath, $toolsPath, $package, $project)
     }
   }
 
+  $isUpgrade = $false
   # If someone already has the SQLite for Windows Runtime (Windows 8.1) Extension SDK installed,
   # then use it when adding a reference to the project and gracefully uninstall this package as
   # it would be unnecessary duplication.
-  $sqliteSDKReferenceNode = $project.Object.References.Find($SQLiteSDKIdentity)
-  if (!$sqliteSDKReferenceNode)
-  {
+  # Otherwise, download, install it, and remove this package.
+  $extMgrAssembly = [appdomain]::currentdomain.getassemblies() | where-object { $_.FullName.StartsWith("Microsoft.VisualStudio.ExtensionManager") } | Select-Object -First 1
+  $svsExtMgr = $extMgrAssembly.GetType("Microsoft.VisualStudio.ExtensionManager.SVsExtensionManager")
+  $extMgrSvc = Get-VSService($svsExtMgr)
+  #$sqliteSDKReferenceNode = $project.Object.References.Find($SQLiteSDKIdentityVer)
+  $sqliteSDKReferenceNode = $project.Object.References | Where-Object { $_.Name -eq $SQLiteSDKName } | Select-Object -First 1
+  $sqliteSDKExt = $null
+#if ($sqliteSDKReferenceNode)
+#{
+    if ($sqliteSDKReferenceNode.Version -ne $SQLiteVersion)
+    {
+        if ($sqliteSDKReferenceNode.Version)
+        {
+          # An existing version of the SDK is installed.  Is the project using it?  Only verified the latest isn't being used.
+          #$extMgrSvc.TryGetInstalledExtension($SQLiteSDKIdentity, [REF]$sqliteSDKExt) -and $sqliteSDKExt)
+          Write-Host "Upgrading from version " $sqliteSDKReferenceNode.Version " to $SQLiteVersion."
+          $isUpgrade = $true
+        }
+    }
+
+    if ($extMgrSvc.TryGetInstalledExtension($SQLiteSDKIdentity, [REF]$sqliteSDKExt))
+    {
+      Write-Host "$SQLiteSDKName is already installed."
+    }
+    else
+    {
+#}
+#if (!$sqliteSDKReferenceNode)
+#{
+#if (!$extMgrSvc.TryGetInstalledExtension($SQLiteSDKIdentity, [REF]$sqliteSDKExt))
+#{
+      try {
+        # download the VSIX from SQLite
+        $client = new-object System.Net.WebClient
+        $client.DownloadFile($sqliteVSIXUrl, $tmpVSIXFile)
+      } catch [Exception] {
+        Write-Host "Failed to download the $SQLiteSDKName Extension SDK."
+      }
+
+      # install it
+      $process = Start-Process $vsixinstaller $tmpVSIXFile -Wait -PassThru
+      if ($process.ExitCode -ne 0)
+      {
+        Write-Host $process.ExitCode
+        throw "Failed to install $SQLiteSDKName Extension SDK."
+      }
+
+      # Need a way to verify install happened. If someone cancels out of vsixinstaller it doesn't return an error code.
+      <#
+      [System.Threading.Thread]::Sleep(1000) #bad, i know
+      #>
+      if (!$extMgrSvc.TryGetInstalledExtension($SQLiteSDKIdentity, [REF]$sqliteSDKExt))
+      {
+        Write-Host $sqliteSDKExt
+        #throw "$SQLiteSDKName installation was canceled."
+      }
+
+      # cleanup
+      Remove-Item $tmpVSIXFile
+#}
+    }
+
     try {
-      $sqliteLibsReference = $project.Object.References.AddSDK($SQLiteSDKName, $SQLiteSDKIdentity)
+      if ($isUpgrade) { $sqliteSDKReferenceNode.Remove() }
+      $sqliteLibsReference = $project.Object.References.AddSDK($SQLiteSDKName, $SQLiteSDKIdentityVer)
       # If the reference is unresolved with no path then assume it isn't installed
       if ($sqliteLibsReference -and $sqliteLibsReference.Resolved -and $sqliteLibsReference.Path)
       {
-        Write-Host "Successfully referenced the installed $SQLiteSDKName Extension SDK.  Uninstalling this package."
+        Write-Host "Successfully installed $SQLiteSDKName Extension SDK.  Uninstalling this package."
         Uninstall-Package $package.Id
         return
       }
-      else
-      {
-        $sqliteLibsReference.Remove()  # Cleanup orphaned reference
-        Write-Host "$SQLiteSDKName is not installed"
-        Write-Host "This package will provide the redistributable binaries as well as update build logic to include the required flavor of 'sqlite3.dll' as part of the build output."
-      }
     } catch [Exception] { }
-  }
+
+    if ($sqliteLibsReference -and (!$sqliteLibsReference.Resolved -or !$sqliteLibsReference.Path))
+    {
+      $sqliteLibsReference.Remove()  # Cleanup orphaned reference
+      throw "Failed to install $SQLiteSDKName."
+    }
+
+    # Success?... uninstall gracefully
+    Uninstall-Package $package.Id
+#}
