@@ -1,31 +1,72 @@
-Start with no version of the official SQLite Extension SDK installed
-install v1.0.2 (upgrade), cancel elevation prompt
-install v1.0.2 (upgrade), cancel vsix installer
-install v1.0.2 (upgrade), complete vsix installer
+-------------------------------------------------------------------------------
+Test 1: Clean install
+  PRECONDITIONS:
+      No version of the SQLite Extension SDK is installed
+      No previous package is installed
 
-Start with a previous version of the official SQLite Extension SDK installed
-install v1.0.2 (upgrade), cancel elevation prompt
-install v1.0.2 (upgrade), cancel vsix installer
-install v1.0.2 (upgrade), complete vsix installer
+  ACTIONS:
+  - Install latest package, cancel elevation prompt
+  - Install latest package, cancel vsix installer
+  - Install latest package, complete vsix installer
 
-Start with the latest version of the official SQLite Extension SDK installed
-install v1.0.2 (upgrade), cancel elevation prompt
-install v1.0.2 (upgrade), cancel vsix installer
-install v1.0.2 (upgrade), complete vsix installer
+  EXPECTED: The first two roll-back with no trace of the package.
+            The last step is successful.
 
 
-Start with no version of the official SQLite Extension SDK installed
-install v1.0.1, build, install v1.0.2 (upgrade), cancel elevation prompt
-install v1.0.1, build, install v1.0.2 (upgrade), cancel vsix installer
-install v1.0.1, build, install v1.0.2 (upgrade), complete vsix installer
+-------------------------------------------------------------------------------
+Test 2: Clean package install where we upgrade SQLite
+  PRECONDITIONS:
+      A previous version of the official SQLite Extension SDK is installed
 
-Start with a previous version of the official SQLite Extension SDK installed
-install v1.0.1, build, install v1.0.2 (upgrade), cancel elevation prompt
-install v1.0.1, build, install v1.0.2 (upgrade), cancel vsix installer
-install v1.0.1, build, install v1.0.2 (upgrade), complete vsix installer
+  ACTIONS:
+  - Install latest package (upgrade), complete vsix installer
 
-Start with the latest version of the official SQLite Extension SDK installed
-install v1.0.1, build, install v1.0.2 (upgrade), cancel elevation prompt
-install v1.0.1, build, install v1.0.2 (upgrade), cancel vsix installer
-install v1.0.1, build, install v1.0.2 (upgrade), complete vsix installer
+  EXPECTED: The package is installed and SQLite is upgraded
 
+
+-------------------------------------------------------------------------------
+Test 3 Clean package install where SQLite is already installed
+  PRECONDITION:
+      The latest version of the official SQLite Extension SDK is installed
+
+  ACTIONS:
+  - Install latest package, complete vsix installer
+
+  EXPECTED: The package is installed, but no change to SQLite
+
+
+-------------------------------------------------------------------------------
+Test 4 Package upgrade where SQLite wasn't already installed
+  PRECONDITIONS:
+      No version of the SQLite Extension SDK is installed
+      A previous version of the package IS installed
+
+  ACTIONS:
+  - install latest package, cancel elevation prompt
+  - install latest package, cancel vsix installer
+  - install latest package, allow vsix installer to complete
+
+  EXPECTED: First two fail and the previous package remains.
+            The last succeeds and both the package and SQLite are upgraded.
+
+
+-------------------------------------------------------------------------------
+Test 5 Package upgrade where we also upgrade SQLite
+  PRECONDITIONS:
+      A previous version of the official SQLite Extension SDK is installed
+
+  ACTIONS:
+  - Install package-1, build, install latest package (upgrade), allow vsix installer to complete
+
+  EXPECTED: The package and SQLite are upgraded
+
+
+-------------------------------------------------------------------------------
+Test 6 Package upgrade where SQLite is already installed
+  PRECONDITIONS:
+      The latest version of the official SQLite Extension SDK is installed
+
+  ACTIONS:
+  - install package-1, build, install latest package (upgrade), allow vsix installer to complete
+
+  EXPECTED: The package is upgrade, but SQLite stays the same
